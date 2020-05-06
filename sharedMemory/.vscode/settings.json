@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "shm1.h": "c",
+        "shmwrite.h": "c"
+    }
+}
