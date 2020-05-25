@@ -40,8 +40,8 @@ int main (int argc, char *argv[])
         if(bytesRcvd < 0){
             DieWithError ("recv() failed");
         }
-        printf("\nReceiving:%s",echoBuffer);
-        //bzero(echoString,echoStringLen);
+        printf("\nReceiving:%s \n",echoBuffer);
+        bzero(echoString,echoStringLen);
     }    
     close (sock);
     info ("close & exit");
