@@ -1,10 +1,3 @@
-/*
-** These examples use semaphores to ensure that writer and reader
-** processes have exclusive, alternating access to the shared-memory region.
-*/
-
-/**********  writer.c  ***********/
-
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -14,6 +7,9 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <sys/fcntl.h>
+#include <inttypes.h>
+#include <fcntl.h>
+#include <stdlib.h>
 
 static char * 
 remove_nl (char * s)
@@ -28,10 +24,16 @@ remove_nl (char * s)
     
     return (s);
 }
-
+mode_t read_umask(int value)
+{
+  mode_t mask = umask(value);
+  umask (mask);
+  return mask;
+}
 
 int main(void)
 {
+    
     sem_t *     semdes = SEM_FAILED;
     char        line[80];
     char        sem_name[80];
@@ -39,7 +41,8 @@ int main(void)
     int         permissions;
     int         choice = ' ';
     int         rtnval;
-
+    char        p_string[5];
+    char        init_val_string[5];
     while (choice != 'q')
     {
         printf ("\nMenu\n"
@@ -62,6 +65,7 @@ int main(void)
         switch (choice)
         {
             case 'n':
+                umask(0000); 
                 if (semdes != SEM_FAILED)
                 {
                     printf ("ERROR: another semaphore already opened\n");
@@ -69,11 +73,23 @@ int main(void)
                 }
                 printf ("Enter name: ");
                 fgets  (sem_name, sizeof (sem_name), stdin);
-                remove_nl (sem_name);
-
-                printf ("Calling sem_open('%s', O_CREAT | O_EXCL)\n", sem_name);
-                semdes = sem_open (sem_name, O_CREAT | O_EXCL, 0600, 1);
-                
+                remove_nl(sem_name);
+                printf("\nSet file permission:");
+                scanf("%o",&permissions); 
+                fgets(p_string,sizeof(p_string),stdin);  
+                remove_nl(p_string);
+                printf("\nEnter initial value:");
+                //getchar();
+                fgets(init_val_string,sizeof(init_val_string),stdin);
+                remove_nl(init_val_string);
+                value = atoi(init_val_string);                                        
+                //permissions = atoi(p_string);
+                //mode_t t_permission = read_umask(permissions);
+                printf("The permissions:%d\n",permissions);
+                printf("Calling sem_open('%s', O_CREAT | O_EXCL)\n", sem_name);
+                printf("Initial value set:%d",value);
+            
+                semdes = sem_open(sem_name, O_CREAT | O_EXCL,permissions,value);                
                 if (semdes == SEM_FAILED)
                 {
                     perror ("ERROR: sem_open() failed");
@@ -99,6 +115,7 @@ int main(void)
                 }
                 printf ("sem_open() returned %p\n", semdes);
                 break;
+            
             case 'c':
                 if (semdes == SEM_FAILED)
                 {
@@ -197,5 +214,6 @@ int main(void)
                 break;
         }
     }
+
 	return (0);
 }

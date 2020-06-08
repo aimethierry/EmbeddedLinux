@@ -53,7 +53,6 @@ int readFile(char * name, int SIZE)
     ptr = mmap (NULL, SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
     char * res = (char*)ptr;
     printf("result is \n ");
-    printf("%c \n", res[0]);
     
     if(res[0] == 'A')
     {
@@ -70,7 +69,7 @@ int readFileB(char * name, int SIZE)
     shm_fd = shm_open (name, O_RDWR, 0600);
     ptr = mmap (NULL, SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
     char * res = (char*)ptr;
-    printf("result is \n ");
+
     printf("%c \n", res[0]);
     
     if(res[0] == 'B')
