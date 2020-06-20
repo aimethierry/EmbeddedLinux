@@ -16,12 +16,10 @@ int createMemory(char * name, int SIZE)
     int shm_fd = -1;
     int newSize;
     shm_fd = shm_open (name, O_CREAT | O_EXCL | O_RDWR, 0600);
-
     if(shm_fd == -1)
     {
         printf("something went wrong in creating memory \n");
     }
-    
     newSize = ftruncate(shm_fd, SIZE); 
     
     if(newSize != 0)
@@ -69,7 +67,6 @@ int readFileB(char * name, int SIZE)
     shm_fd = shm_open (name, O_RDWR, 0600);
     ptr = mmap (NULL, SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
     char * res = (char*)ptr;
-
     printf("%c \n", res[0]);
     
     if(res[0] == 'B')
@@ -79,21 +76,12 @@ int readFileB(char * name, int SIZE)
     return -1;
 } 
 
-  
-
 static void child_activities (void)
 {
-    /* the size (in bytes) of shared memory object */
     int SIZE = 4096; 
-  
-    /* name of the shared memory object */
     char* name = "OS"; 
-   
-    /* remove the shared memory object */
     if(readFile(name, SIZE) == 0)
     {
-        // printf("delete the file \n");
-        // shm_unlink(name); 
         writeA();
     }
 }
@@ -109,13 +97,7 @@ void writeA()
 void writeB()
 {
     int SIZE = 4096; 
-    /* name of the shared memory object */
     char * name = "OS"; 
-    // char message[5];
-    // printf("enter a message \n");
-    // scanf("%s", message);
-    // printf("message is %s \n", message);
-    // createMemory(name, SIZE);
     writeIntoMemory(name, "B");
 
 }
@@ -123,7 +105,7 @@ static void parent_activity (void)
 {
     /* the size (in bytes) of shared memory object */
     int SIZE = 4096; 
-    /* name of the shared memory object */
+    
     char* name = "OS"; 
     if(readFileB(name, SIZE) == 0)
     {
@@ -137,7 +119,7 @@ int main (void)
 {
     /* the size (in bytes) of shared memory object */
     int SIZE = 4096; 
-    /* name of the shared memory object */
+    
     char * name = "OS"; 
     
     createMemory(name, SIZE);   

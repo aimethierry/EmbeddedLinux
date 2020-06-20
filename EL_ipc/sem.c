@@ -184,6 +184,7 @@ int main(void)
                     break;
                 }
                 printf ("Calling sem_getvalue(%p)\n", semdes);
+                
                 rtnval = sem_getvalue (semdes, &value);
                 if (rtnval != 0)
                 {

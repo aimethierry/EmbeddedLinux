@@ -56,11 +56,8 @@ int main()
 
     printf("enter a message \n");
     scanf("%s", message);
-    printf("message is %s \n", message);
 
     createMemory(name, SIZE);
     writeIntoMemory(name, "A");
-    
-    
     return 0; 
 } 

@@ -8,6 +8,15 @@
 #include <time.h>
 
 
+
+
+
+
+
+
+
+
+
 static pid_t  	pid;								// Process ID of current process
 static bool     to_quit = false;		// Indicate quit
 static char			blocked_sigs[32];		// Array of blocked signals
@@ -17,7 +26,7 @@ siginfo_t  t;
 
 static void my_sig_handler (int signum, siginfo_t *info)
 {
-    t = *(info);
+  t = *(info);
 	printf ("\n(%d) Signal %d received : %d\n", pid, signum, info->si_value.sival_int);
 }
 
@@ -214,9 +223,9 @@ int main(int argc, char * argv[])
         scanf("%d", &sig_val.sival_int);
 
         if (sigqueue(target_pid, sig, sig_val) != 0)
-			perror("sigqueue()");
+			    perror("sigqueue()");
 				
-		printf("(%d) Signal %d sent to process %d \n", pid, sig, target_pid);
+		    printf("(%d) Signal %d sent to process %d \n", pid, sig, target_pid);
         break;
 
 
